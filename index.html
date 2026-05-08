@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum Premium - iOS Glass + Payment Pop Up</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            /* Dark Mode (Default) */
+            --bg-color: #000000;
+            --glass-bg: rgba(40, 40, 40, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-muted: rgba(235, 235, 245, 0.6);
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --card-active: rgba(10, 132, 255, 0.15);
+            --primary-color: #0A84FF;
+            --submit-bg: #0A84FF;
+            --submit-text: #ffffff;
+            --segment-bg: rgba(118, 118, 128, 0.24);
+            --shadow: rgba(0, 0, 0, 0.5);
+            --popup-overlay: rgba(0, 0, 0, 0.6);
+            --price-bg: rgba(10, 132, 255, 0.15);
+        }
+
+        body.light-mode {
+            /* Light Mode */
+            --bg-color: #F2F2F7;
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --text-main: #000000;
+            --text-muted: rgba(60, 60, 67, 0.6);
+            --input-bg: rgba(255, 255, 255, 0.5);
+            --card-bg: rgba(255, 255, 255, 0.6);
+            --card-active: rgba(0, 122, 255, 0.1);
+            --primary-color: #007AFF;
+            --submit-bg: #000000;
+            --submit-text: #ffffff;
+            --segment-bg: rgba(118, 118, 128, 0.12);
+            --shadow: rgba(0, 0, 0, 0.05);
+            --popup-overlay: rgba(255, 255, 255, 0.4);
+            --price-bg: rgba(0, 122, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'JetBrains Mono', monospace;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--bg-color);
+            overflow: hidden;
+            transition: background 0.4s ease;
+        }
+
+        .theme-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 0.5px solid var(--glass-border);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            color: var(--text-main);
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 4px 14px var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.6;
+            animation: float 10s infinite alternate ease-in-out;
+        }
+        .blob1 { width: 400px; height: 400px; background: #FF2D55; top: -10%; left: 0%; }
+        .blob2 { width: 500px; height: 500px; background: #5E5CE6; bottom: -20%; right: -10%; }
+        .blob3 { width: 300px; height: 300px; background: #32ADE6; top: 40%; left: 30%; filter: blur(100px); }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-30px) scale(1.05); }
+        }
+
+        /* Container Glassmorphism Utama */
+        .glass-container {
+            position: relative;
+            z-index: 1;
+            width: 400px;
+            padding: 35px 30px;
+            border-radius: 32px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 24px 48px var(--shadow);
+            color: var(--text-main);
+            transition: height 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .toggle-box {
+            display: flex;
+            background: var(--segment-bg);
+            border-radius: 12px;
+            padding: 2px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .toggle-tab-btn {
+            flex: 1;
+            padding: 10px 0;
+            cursor: pointer;
+            background: transparent;
+            border: 0;
+            outline: none;
+            color: var(--text-main);
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 1;
+            text-align: center;
+        }
+
+        #btn-bg {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: calc(50% - 2px);
+            height: calc(100% - 4px);
+            background: #636366;
+            border-radius: 10px;
+            transition: 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 0;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+        }
+
+        body.light-mode #btn-bg { background: #ffffff; }
+
+        .form-box {
+            position: relative;
+            width: 100%;
+            height: 220px; 
+            overflow: hidden;
+            transition: height 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .form-group {
+            position: absolute;
+            width: 100%;
+            transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        #login { left: 0; }
+        #buy-access { left: 450px; }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            margin: 6px 0;
+            background: var(--input-bg);
+            border: 0.5px solid var(--glass-border);
+            border-radius: 14px;
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .input-field::placeholder { color: var(--text-muted); }
+        .input-field:focus { border: 1.5px solid var(--primary-color); background: var(--card-bg); }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin: 15px 0 8px 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-container { display: flex; gap: 8px; margin-bottom: 5px; }
+        .choice-card { flex: 1; cursor: pointer; }
+        .choice-card input[type="radio"] { display: none; }
+
+        .card-content {
+            background: var(--card-bg);
+            border: 0.5px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 12px 4px;
+            text-align: center;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .card-main-text { font-size: 13px; font-weight: 600; color: var(--text-main); }
+        .card-sub-text { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+        
+        .card-price {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--primary-color);
+            background: var(--price-bg);
+            padding: 3px 6px;
+            border-radius: 6px;
+            margin-top: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .choice-card input[type="radio"]:checked + .card-content {
+            background: var(--card-active);
+            border: 1px solid var(--primary-color);
+        }
+
+        .choice-card input[type="radio"]:checked + .card-content .card-price {
+            background: var(--primary-color);
+            color: #ffffff;
+        }
+
+        /* --- ANIMASI LOADING & TOMBOL --- */
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background: var(--submit-bg);
+            color: var(--submit-text);
+            border: none;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .submit-btn:active { transform: scale(0.97); opacity: 0.8; }
+        
+        .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2.5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            animation: spin 0.8s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .submit-btn.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        .submit-btn.loading .spinner { display: block; }
+        .submit-btn.loading .btn-text { opacity: 0.8; }
+
+        .forgot-pass { text-align: center; margin-top: 15px; font-size: 12px; }
+        .forgot-pass a { color: var(--primary-color); text-decoration: none; }
+
+        /* ==========================================
+           DESAIN MODAL / POP UP UMUM
+           ========================================== */
+        .popup-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--popup-overlay);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .popup-overlay.active { opacity: 1; visibility: visible; }
+
+        .popup-box {
+            width: 360px;
+            text-align: center;
+            transform: scale(0.9);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            padding: 35px 25px;
+        }
+
+        .popup-overlay.active .popup-box { transform: scale(1); }
+
+        .close-btn {
+            position: absolute;
+            top: 15px; right: 15px;
+            background: var(--card-bg);
+            border: 0.5px solid var(--glass-border);
+            color: var(--text-main);
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            font-size: 18px; font-weight: 600;
+            cursor: pointer;
+            display: flex; justify-content: center; align-items: center;
+            transition: 0.2s;
+        }
+
+        .close-btn:hover { background: var(--card-active); color: var(--primary-color); }
+
+        .popup-title { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
+        .popup-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 25px; line-height: 1.5; }
+
+        /* ==========================================
+           TEMA KHUSUS MODAL SUCCESS (BIRU TUA)
+           ========================================== */
+        #success-popup .popup-box {
+            background: rgba(10, 25, 55, 0.75);
+            border: 1px solid rgba(40, 100, 200, 0.3);
+            box-shadow: 0 24px 48px rgba(0, 10, 30, 0.8);
+        }
+
+        body.light-mode #success-popup .popup-box { background: rgba(20, 45, 85, 0.85); }
+        #success-popup .popup-title, body.light-mode #success-popup .popup-title { color: #ffffff; }
+        #success-popup .popup-desc, body.light-mode #success-popup .popup-desc { color: rgba(255, 255, 255, 0.8); }
+
+        .success-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            background: rgba(10, 132, 255, 0.15); 
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #0A84FF; 
+            box-shadow: 0 0 25px rgba(10, 132, 255, 0.3);
+        }
+
+        .success-icon svg { width: 35px; height: 35px; }
+        .btn-success { background: #003366; color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.15); }
+        .btn-success:hover { background: #002244; }
+
+        /* ==========================================
+           TEMA KHUSUS MODAL LUPA KATA SANDI (WARNING)
+           ========================================== */
+        .warning-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            background: rgba(255, 69, 58, 0.15); 
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #FF453A; 
+            box-shadow: 0 0 25px rgba(255, 69, 58, 0.3);
+        }
+
+        .warning-icon svg { width: 35px; height: 35px; }
+
+        /* --- Payment Specifics --- */
+        .qris-wrapper {
+            background: #ffffff;
+            padding: 15px; border-radius: 20px;
+            display: inline-block; margin-bottom: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .qris-logo { width: 80px; margin-bottom: 8px; }
+        .qris-img { width: 160px; height: 160px; border-radius: 10px; }
+
+        .payment-list {
+            background: var(--input-bg);
+            border: 0.5px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 12px; text-align: left; margin-top: 5px;
+        }
+        .pay-item {
+            font-size: 13px; color: var(--text-main);
+            padding: 8px 0; border-bottom: 0.5px solid var(--glass-border);
+            display: flex; justify-content: space-between;
+        }
+        .pay-item:last-child { border-bottom: none; }
+        .pay-item strong { color: var(--primary-color); cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <button class="theme-btn" id="theme-toggle" onclick="toggleTheme()">☀️</button>
+
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+
+    <div class="glass-container" id="main-container">
+        <div class="toggle-box">
+            <div id="btn-bg"></div>
+            <button type="button" class="toggle-tab-btn" id="tab-login" onclick="showLogin()">Login</button>
+            <button type="button" class="toggle-tab-btn" id="tab-buy" onclick="showBuyAccess()">Beli Akses</button>
+        </div>
+
+        <div class="form-box" id="form-container">
+            <form id="login" class="form-group" onsubmit="handleLogin(event)">
+                <input type="text" class="input-field" placeholder="Username" required>
+                <input type="password" class="input-field" placeholder="Kata Sandi" required>
+                <div class="forgot-pass">
+                    <a href="#" onclick="showForgotPopup(event)">Lupa Kata Sandi?</a>
+                </div>
+                <button type="submit" class="submit-btn" id="login-btn">
+                    <div class="spinner"></div>
+                    <span class="btn-text">Masuk</span>
+                </button>
+            </form>
+
+            <form id="buy-access" class="form-group">
+                <input type="text" class="input-field" placeholder="Username Baru" required>
+                <input type="password" class="input-field" placeholder="Buat Kata Sandi" required>
+                
+                <div class="section-title">Paket Akses</div>
+                <div class="card-container">
+                    <label class="choice-card">
+                        <input type="radio" name="paket" value="basic" required>
+                        <div class="card-content">
+                            <span class="card-main-text">Basic</span>
+                            <span class="card-sub-text">1 Bln</span>
+                            <span class="card-price">Rp 160k</span>
+                        </div>
+                    </label>
+                    <label class="choice-card">
+                        <input type="radio" name="paket" value="pro">
+                        <div class="card-content">
+                            <span class="card-main-text">Pro</span>
+                            <span class="card-sub-text">6 Bln</span>
+                            <span class="card-price">Rp 360k</span>
+                        </div>
+                    </label>
+                    <label class="choice-card">
+                        <input type="radio" name="paket" value="vip">
+                        <div class="card-content">
+                            <span class="card-main-text">VIP</span>
+                            <span class="card-sub-text">Life</span>
+                            <span class="card-price">Rp 660k</span>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="section-title">Metode Bayar</div>
+                <div class="card-container">
+                    <label class="choice-card"><input type="radio" name="payment" value="bank" required><div class="card-content"><span class="card-main-text">Bank</span></div></label>
+                    <label class="choice-card"><input type="radio" name="payment" value="ewallet"><div class="card-content"><span class="card-main-text">E-Wallet</span></div></label>
+                    <label class="choice-card"><input type="radio" name="payment" value="qris"><div class="card-content"><span class="card-main-text">QRIS</span></div></label>
+                </div>
+                
+                <button type="submit" class="submit-btn">Beli Sekarang</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="success-popup">
+        <div class="popup-box glass-container">
+            <div class="success-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <h3 class="popup-title">Login Berhasil!</h3>
+            <p class="popup-desc">Otentikasi berhasil, selamat datang di server YMBF.</p>
+            <button class="submit-btn btn-success" onclick="proceedToDashboard()">Lanjutkan</button>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="payment-popup">
+        <div class="popup-box glass-container">
+            <button class="close-btn" onclick="closePopup()">×</button>
+            <h3 class="popup-title">Selesaikan Pembayaran</h3>
+            <p class="popup-desc">Scan kode QRIS di bawah ini atau transfer ke e-wallet yang tersedia.</p>
+
+            <div class="qris-wrapper">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg" alt="QRIS Logo" class="qris-logo"><br>
+                <img src="https://files.catbox.moe/inm2a3.jpg" alt="QR Code" class="qris-img">
+            </div>
+
+            <div class="section-title" style="margin: 0 0 5px 4px; text-align: left;">Atau Transfer Manual:</div>
+            <div class="payment-list">
+                <div class="pay-item">
+                    <span>DANA : </span>
+                    <strong onclick="alert('Nomor disalin!')">085805669061</strong>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="confirmPayment()" style="margin-top: 20px;">Konfirmasi Pembayaran</button>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="forgot-popup">
+        <div class="popup-box glass-container">
+            <button class="close-btn" onclick="closeForgotPopup()">×</button>
+            <div class="warning-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+            </div>
+            <h3 class="popup-title">Akses Ditolak</h3>
+            <p class="popup-desc">Kamu tidak memiliki akun sebelumnya. Silakan beli akses terlebih dahulu.</p>
+            <button class="submit-btn" style="background: #FF453A; color: white;" onclick="closeForgotAndGoToBuy()">Beli Akses Sekarang</button>
+        </div>
+    </div>
+
+    <script>
+        var loginForm = document.getElementById("login");
+        var buyAccessForm = document.getElementById("buy-access");
+        var btnBg = document.getElementById("btn-bg");
+        var formContainer = document.getElementById("form-container");
+        var isLightMode = false;
+
+        // --- Navigasi Tab ---
+        function showBuyAccess() {
+            loginForm.style.left = "-450px";
+            buyAccessForm.style.left = "0";
+            btnBg.style.left = "calc(50% + 0px)"; 
+            formContainer.style.height = "440px"; 
+        }
+
+        function showLogin() {
+            loginForm.style.left = "0";
+            buyAccessForm.style.left = "450px";
+            btnBg.style.left = "2px";
+            formContainer.style.height = "220px"; 
+        }
+
+        // --- Tema (Dark/Light Mode) ---
+        function toggleTheme() {
+            var body = document.body;
+            var themeBtn = document.getElementById("theme-toggle");
+            body.classList.toggle("light-mode");
+            isLightMode = body.classList.contains("light-mode");
+            themeBtn.innerHTML = isLightMode ? "🌙" : "☀️";
+        }
+
+        // --- Fungsi Login ---
+        function handleLogin(event) {
+            event.preventDefault(); 
+            var btn = document.getElementById("login-btn");
+            var btnText = btn.querySelector(".btn-text");
+            
+            btn.classList.add("loading");
+            btnText.innerText = "Memproses...";
+            
+            setTimeout(function() {
+                btn.classList.remove("loading");
+                btnText.innerText = "Masuk";
+                document.getElementById('success-popup').classList.add('active');
+            }, 2000);
+        }
+
+        function proceedToDashboard() {
+            document.getElementById('success-popup').classList.remove('active');
+             window.location.href = 'dashboard.html';
+        }
+
+        // --- Fungsi Lupa Kata Sandi ---
+        var forgotPopup = document.getElementById('forgot-popup');
+
+        function showForgotPopup(event) {
+            event.preventDefault(); 
+            forgotPopup.classList.add('active');
+        }
+
+        function closeForgotPopup() {
+            forgotPopup.classList.remove('active');
+        }
+
+        function closeForgotAndGoToBuy() {
+            closeForgotPopup();
+            setTimeout(() => {
+                showBuyAccess();
+            }, 300); // Delay agar pop up selesai tertutup sebelum ganti form
+        }
+
+        // --- Fungsi Pembayaran ---
+        var paymentPopup = document.getElementById('payment-popup');
+        
+        buyAccessForm.addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            paymentPopup.classList.add('active'); 
+        });
+
+        function closePopup() {
+            paymentPopup.classList.remove('active');
+        }
+
+        function confirmPayment() {
+            alert('Anda akan diarahkan ke Telegram untuk mengirimkan bukti konfirmasi.');
+            closePopup();
+            window.open('https://t.me/iyosh_09', '_blank');
+            
+            buyAccessForm.reset();
+            setTimeout(() => { showLogin(); }, 500);
+        }
+
+        // --- Event Listener Umum (Klik luar area modal untuk tutup) ---
+        document.querySelectorAll('.popup-overlay').forEach(popup => {
+            popup.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
