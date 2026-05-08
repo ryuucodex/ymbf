@@ -102,7 +102,6 @@
             100% { transform: translateY(-30px) scale(1.05); }
         }
 
-        /* Container Glassmorphism Utama */
         .glass-container {
             position: relative;
             z-index: 1;
@@ -240,7 +239,6 @@
             color: #ffffff;
         }
 
-        /* --- ANIMASI LOADING & TOMBOL --- */
         .submit-btn {
             width: 100%;
             padding: 15px;
@@ -271,14 +269,9 @@
             margin-right: 10px;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        .submit-btn.loading {
-            pointer-events: none;
-            opacity: 0.8;
-        }
+        .submit-btn.loading { pointer-events: none; opacity: 0.8; }
         .submit-btn.loading .spinner { display: block; }
         .submit-btn.loading .btn-text { opacity: 0.8; }
 
@@ -335,76 +328,75 @@
         .popup-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 25px; line-height: 1.5; }
 
         /* ==========================================
-           TEMA KHUSUS MODAL SUCCESS (BIRU TUA)
+           TEMA KHUSUS MODAL
            ========================================== */
         #success-popup .popup-box {
             background: rgba(10, 25, 55, 0.75);
             border: 1px solid rgba(40, 100, 200, 0.3);
             box-shadow: 0 24px 48px rgba(0, 10, 30, 0.8);
         }
-
         body.light-mode #success-popup .popup-box { background: rgba(20, 45, 85, 0.85); }
         #success-popup .popup-title, body.light-mode #success-popup .popup-title { color: #ffffff; }
         #success-popup .popup-desc, body.light-mode #success-popup .popup-desc { color: rgba(255, 255, 255, 0.8); }
 
         .success-icon {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 20px;
-            background: rgba(10, 132, 255, 0.15); 
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #0A84FF; 
-            box-shadow: 0 0 25px rgba(10, 132, 255, 0.3);
+            width: 70px; height: 70px; margin: 0 auto 20px;
+            background: rgba(10, 132, 255, 0.15); border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            color: #0A84FF; box-shadow: 0 0 25px rgba(10, 132, 255, 0.3);
         }
-
         .success-icon svg { width: 35px; height: 35px; }
-        .btn-success { background: #003366; color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.15); }
-        .btn-success:hover { background: #002244; }
 
-        /* ==========================================
-           TEMA KHUSUS MODAL LUPA KATA SANDI (WARNING)
-           ========================================== */
         .warning-icon {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 20px;
-            background: rgba(255, 69, 58, 0.15); 
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #FF453A; 
-            box-shadow: 0 0 25px rgba(255, 69, 58, 0.3);
+            width: 70px; height: 70px; margin: 0 auto 20px;
+            background: rgba(255, 69, 58, 0.15); border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            color: #FF453A; box-shadow: 0 0 25px rgba(255, 69, 58, 0.3);
         }
-
         .warning-icon svg { width: 35px; height: 35px; }
 
-        /* --- Payment Specifics --- */
-        .qris-wrapper {
-            background: #ffffff;
-            padding: 15px; border-radius: 20px;
-            display: inline-block; margin-bottom: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        #offline-popup {
+            z-index: 9999; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
         }
+        .offline-icon {
+            width: 70px; height: 70px; margin: 0 auto 20px;
+            background: rgba(255, 149, 0, 0.15); border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            color: #FF9500; box-shadow: 0 0 25px rgba(255, 149, 0, 0.3);
+            animation: pulse-offline 2s infinite;
+        }
+        .offline-icon svg { width: 35px; height: 35px; }
+        @keyframes pulse-offline {
+            0% { box-shadow: 0 0 0 0 rgba(255, 149, 0, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 149, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 149, 0, 0); }
+        }
+
+        #copy-popup {
+            z-index: 1000;
+        }
+        .copy-icon {
+            width: 60px; height: 60px; margin: 0 auto 15px;
+            background: rgba(52, 199, 89, 0.15); border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            color: #34C759; box-shadow: 0 0 20px rgba(52, 199, 89, 0.3);
+        }
+        .copy-icon svg { width: 30px; height: 30px; }
+
+        /* --- Payment Specifics --- */
+        .qris-wrapper { background: #ffffff; padding: 15px; border-radius: 20px; display: inline-block; margin-bottom: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         .qris-logo { width: 80px; margin-bottom: 8px; }
         .qris-img { width: 160px; height: 160px; border-radius: 10px; }
-
-        .payment-list {
-            background: var(--input-bg);
-            border: 0.5px solid var(--glass-border);
-            border-radius: 14px;
-            padding: 12px; text-align: left; margin-top: 5px;
-        }
-        .pay-item {
-            font-size: 13px; color: var(--text-main);
-            padding: 8px 0; border-bottom: 0.5px solid var(--glass-border);
-            display: flex; justify-content: space-between;
-        }
+        .payment-list { background: var(--input-bg); border: 0.5px solid var(--glass-border); border-radius: 14px; padding: 12px; text-align: left; margin-top: 5px; }
+        .pay-item { font-size: 13px; color: var(--text-main); padding: 8px 0; border-bottom: 0.5px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; }
         .pay-item:last-child { border-bottom: none; }
-        .pay-item strong { color: var(--primary-color); cursor: pointer; }
+        
+        .copy-number {
+            color: var(--primary-color); cursor: pointer; padding: 6px 12px;
+            border-radius: 8px; background: var(--card-bg); transition: all 0.2s ease; font-weight: 700;
+        }
+        .copy-number:hover { background: var(--card-active); transform: scale(1.05); }
+        .copy-number:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
@@ -424,8 +416,8 @@
 
         <div class="form-box" id="form-container">
             <form id="login" class="form-group" onsubmit="handleLogin(event)">
-                <input type="text" class="input-field" placeholder="Username" required>
-                <input type="password" class="input-field" placeholder="Kata Sandi" required>
+                <input type="text" id="login-username" class="input-field" placeholder="Username" required>
+                <input type="password" id="login-password" class="input-field" placeholder="Kata Sandi" required>
                 <div class="forgot-pass">
                     <a href="#" onclick="showForgotPopup(event)">Lupa Kata Sandi?</a>
                 </div>
@@ -441,30 +433,9 @@
                 
                 <div class="section-title">Paket Akses</div>
                 <div class="card-container">
-                    <label class="choice-card">
-                        <input type="radio" name="paket" value="basic" required>
-                        <div class="card-content">
-                            <span class="card-main-text">Basic</span>
-                            <span class="card-sub-text">1 Bln</span>
-                            <span class="card-price">Rp 160k</span>
-                        </div>
-                    </label>
-                    <label class="choice-card">
-                        <input type="radio" name="paket" value="pro">
-                        <div class="card-content">
-                            <span class="card-main-text">Pro</span>
-                            <span class="card-sub-text">6 Bln</span>
-                            <span class="card-price">Rp 360k</span>
-                        </div>
-                    </label>
-                    <label class="choice-card">
-                        <input type="radio" name="paket" value="vip">
-                        <div class="card-content">
-                            <span class="card-main-text">VIP</span>
-                            <span class="card-sub-text">Life</span>
-                            <span class="card-price">Rp 660k</span>
-                        </div>
-                    </label>
+                    <label class="choice-card"><input type="radio" name="paket" value="basic" required><div class="card-content"><span class="card-main-text">Basic</span><span class="card-sub-text">1 Bln</span><span class="card-price">Rp 160k</span></div></label>
+                    <label class="choice-card"><input type="radio" name="paket" value="pro"><div class="card-content"><span class="card-main-text">Pro</span><span class="card-sub-text">6 Bln</span><span class="card-price">Rp 360k</span></div></label>
+                    <label class="choice-card"><input type="radio" name="paket" value="vip"><div class="card-content"><span class="card-main-text">VIP</span><span class="card-sub-text">Life</span><span class="card-price">Rp 660k</span></div></label>
                 </div>
                 
                 <div class="section-title">Metode Bayar</div>
@@ -482,13 +453,26 @@
     <div class="popup-overlay" id="success-popup">
         <div class="popup-box glass-container">
             <div class="success-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
             </div>
             <h3 class="popup-title">Login Berhasil!</h3>
             <p class="popup-desc">Otentikasi berhasil, selamat datang di server YMBF.</p>
-            <button class="submit-btn btn-success" onclick="proceedToDashboard()">Lanjutkan</button>
+            <button class="submit-btn" style="background: #003366; color: white;" onclick="proceedToDashboard()">Lanjutkan</button>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="error-popup">
+        <div class="popup-box glass-container">
+            <button class="close-btn" onclick="document.getElementById('error-popup').classList.remove('active')">×</button>
+            <div class="warning-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </div>
+            <h3 class="popup-title">Login Gagal</h3>
+            <p class="popup-desc">Username atau Kata Sandi yang kamu masukkan salah.</p>
+            <button class="submit-btn" style="background: #FF453A; color: white;" onclick="document.getElementById('error-popup').classList.remove('active')">Coba Lagi</button>
         </div>
     </div>
 
@@ -497,20 +481,17 @@
             <button class="close-btn" onclick="closePopup()">×</button>
             <h3 class="popup-title">Selesaikan Pembayaran</h3>
             <p class="popup-desc">Scan kode QRIS di bawah ini atau transfer ke e-wallet yang tersedia.</p>
-
             <div class="qris-wrapper">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg" alt="QRIS Logo" class="qris-logo"><br>
                 <img src="https://files.catbox.moe/inm2a3.jpg" alt="QR Code" class="qris-img">
             </div>
-
             <div class="section-title" style="margin: 0 0 5px 4px; text-align: left;">Atau Transfer Manual:</div>
             <div class="payment-list">
                 <div class="pay-item">
                     <span>DANA : </span>
-                    <strong onclick="alert('Nomor disalin!')">085805669061</strong>
+                    <span class="copy-number" onclick="copyToClipboard('085805669061')" title="Klik untuk menyalin">085805669061</span>
                 </div>
             </div>
-
             <button class="submit-btn" onclick="confirmPayment()" style="margin-top: 20px;">Konfirmasi Pembayaran</button>
         </div>
     </div>
@@ -519,15 +500,33 @@
         <div class="popup-box glass-container">
             <button class="close-btn" onclick="closeForgotPopup()">×</button>
             <div class="warning-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                </svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
             </div>
             <h3 class="popup-title">Akses Ditolak</h3>
             <p class="popup-desc">Kamu tidak memiliki akun sebelumnya. Silakan beli akses terlebih dahulu.</p>
             <button class="submit-btn" style="background: #FF453A; color: white;" onclick="closeForgotAndGoToBuy()">Beli Akses Sekarang</button>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="copy-popup">
+        <div class="popup-box glass-container" style="width: 240px; padding: 25px 20px;">
+            <div class="copy-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <h3 class="popup-title" style="font-size: 16px; margin-bottom: 0;">Disalin!</h3>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="offline-popup">
+        <div class="popup-box glass-container">
+            <div class="offline-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="1" x2="23" y2="23"></line><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path><path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+            </div>
+            <h3 class="popup-title">Koneksi Terputus</h3>
+            <p class="popup-desc">Sepertinya kamu sedang offline. Pastikan data seluler atau Wi-Fi kamu menyala.</p>
+            <button class="submit-btn" style="background: #FF9500; color: white;" onclick="window.location.reload()">Muat Ulang</button>
         </div>
     </div>
 
@@ -538,99 +537,75 @@
         var formContainer = document.getElementById("form-container");
         var isLightMode = false;
 
-        // --- Navigasi Tab ---
-        function showBuyAccess() {
-            loginForm.style.left = "-450px";
-            buyAccessForm.style.left = "0";
-            btnBg.style.left = "calc(50% + 0px)"; 
-            formContainer.style.height = "440px"; 
-        }
+        function showBuyAccess() { loginForm.style.left = "-450px"; buyAccessForm.style.left = "0"; btnBg.style.left = "calc(50% + 0px)"; formContainer.style.height = "440px"; }
+        function showLogin() { loginForm.style.left = "0"; buyAccessForm.style.left = "450px"; btnBg.style.left = "2px"; formContainer.style.height = "220px"; }
+        function toggleTheme() { var body = document.body; var themeBtn = document.getElementById("theme-toggle"); body.classList.toggle("light-mode"); isLightMode = body.classList.contains("light-mode"); themeBtn.innerHTML = isLightMode ? "🌙" : "☀️"; }
 
-        function showLogin() {
-            loginForm.style.left = "0";
-            buyAccessForm.style.left = "450px";
-            btnBg.style.left = "2px";
-            formContainer.style.height = "220px"; 
-        }
-
-        // --- Tema (Dark/Light Mode) ---
-        function toggleTheme() {
-            var body = document.body;
-            var themeBtn = document.getElementById("theme-toggle");
-            body.classList.toggle("light-mode");
-            isLightMode = body.classList.contains("light-mode");
-            themeBtn.innerHTML = isLightMode ? "🌙" : "☀️";
-        }
-
-        // --- Fungsi Login ---
+        // --- FUNGSI LOGIN (DENGAN VALIDASI LOCAL) ---
         function handleLogin(event) {
             event.preventDefault(); 
             var btn = document.getElementById("login-btn");
             var btnText = btn.querySelector(".btn-text");
             
-            btn.classList.add("loading");
+            // Ambil nilai dari input yang diketik pengguna
+            var userVal = document.getElementById("login-username").value;
+            var passVal = document.getElementById("login-password").value;
+            
+            btn.classList.add("loading"); 
             btnText.innerText = "Memproses...";
             
-            setTimeout(function() {
-                btn.classList.remove("loading");
-                btnText.innerText = "Masuk";
-                document.getElementById('success-popup').classList.add('active');
-            }, 2000);
+            setTimeout(function() { 
+                btn.classList.remove("loading"); 
+                btnText.innerText = "Masuk"; 
+                
+                // Cek apakah username dan password cocok
+                if (userVal === "iyosh_09" && passVal === "admin123") {
+                    document.getElementById('success-popup').classList.add('active'); 
+                } else {
+                    document.getElementById('error-popup').classList.add('active'); 
+                }
+            }, 1500); // Simulasi loading 1.5 detik
         }
 
-        function proceedToDashboard() {
-            document.getElementById('success-popup').classList.remove('active');
-             window.location.href = 'dashboard.html';
-        }
+        function proceedToDashboard() { document.getElementById('success-popup').classList.remove('active'); window.location.href = 'dashboard.html'; }
 
-        // --- Fungsi Lupa Kata Sandi ---
         var forgotPopup = document.getElementById('forgot-popup');
+        function showForgotPopup(event) { event.preventDefault(); forgotPopup.classList.add('active'); }
+        function closeForgotPopup() { forgotPopup.classList.remove('active'); }
+        function closeForgotAndGoToBuy() { closeForgotPopup(); setTimeout(() => { showBuyAccess(); }, 300); }
 
-        function showForgotPopup(event) {
-            event.preventDefault(); 
-            forgotPopup.classList.add('active');
-        }
-
-        function closeForgotPopup() {
-            forgotPopup.classList.remove('active');
-        }
-
-        function closeForgotAndGoToBuy() {
-            closeForgotPopup();
-            setTimeout(() => {
-                showBuyAccess();
-            }, 300); // Delay agar pop up selesai tertutup sebelum ganti form
-        }
-
-        // --- Fungsi Pembayaran ---
         var paymentPopup = document.getElementById('payment-popup');
-        
-        buyAccessForm.addEventListener('submit', function(e) {
-            e.preventDefault(); 
-            paymentPopup.classList.add('active'); 
-        });
+        buyAccessForm.addEventListener('submit', function(e) { e.preventDefault(); paymentPopup.classList.add('active'); });
+        function closePopup() { paymentPopup.classList.remove('active'); }
+        function confirmPayment() { alert('Anda akan diarahkan ke Telegram untuk mengirimkan bukti konfirmasi.'); closePopup(); window.open('https://t.me/iyosh_09', '_blank'); buyAccessForm.reset(); setTimeout(() => { showLogin(); }, 500); }
 
-        function closePopup() {
-            paymentPopup.classList.remove('active');
+        // --- SISTEM DETEKSI JARINGAN ---
+        var offlinePopup = document.getElementById('offline-popup');
+        window.addEventListener('offline', function() { offlinePopup.classList.add('active'); });
+        window.addEventListener('online', function() { offlinePopup.classList.remove('active'); });
+
+        // --- FUNGSI SALIN NOMOR ---
+        function copyToClipboard(textToCopy) {
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                var copyPopup = document.getElementById('copy-popup');
+                copyPopup.classList.add('active');
+                setTimeout(() => { copyPopup.classList.remove('active'); }, 1500);
+            }).catch(err => {
+                console.error('Gagal menyalin teks: ', err);
+                alert("Gagal menyalin nomor.");
+            });
         }
 
-        function confirmPayment() {
-            alert('Anda akan diarahkan ke Telegram untuk mengirimkan bukti konfirmasi.');
-            closePopup();
-            window.open('https://t.me/iyosh_09', '_blank');
-            
-            buyAccessForm.reset();
-            setTimeout(() => { showLogin(); }, 500);
-        }
-
-        // --- Event Listener Umum (Klik luar area modal untuk tutup) ---
+        // --- ATURAN KLIK OVERLAY POPUP ---
         document.querySelectorAll('.popup-overlay').forEach(popup => {
             popup.addEventListener('click', function(e) {
-                if (e.target === this) {
+                if (e.target === this && this.id !== 'offline-popup' && this.id !== 'copy-popup') {
                     this.classList.remove('active');
                 }
             });
         });
+
+        if (!navigator.onLine) { offlinePopup.classList.add('active'); }
     </script>
 
 </body>
